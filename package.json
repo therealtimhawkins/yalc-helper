@@ -1,0 +1,15 @@
+{
+  "name": "yalc-helper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tim Hawkins",
+  "license": "ISC",
+  "dependencies": {
+    "cli-color": "^2.0.0",
+    "make-runnable": "^1.3.8"
+  }
+}
