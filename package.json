@@ -11,7 +11,8 @@
     "yalc",
     "yarn",
     "npm",
-    "package"
+    "developer-tools",
+    "dependencies"
   ],
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",

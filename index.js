@@ -1,68 +1,70 @@
 const util = require("util")
-const clc = require('cli-color')
+const clc = require("cli-color")
 const config = require("../../yalc-helper.config.js")
 
 const exec = util.promisify(require("child_process").exec)
 
-const error = clc.red.bold;
-const success = clc.green.bold;
+const error = clc.red.bold
+const success = clc.green.bold
+
+const noPackages = "📦 No packages found in yalc-helper.config.js."
 
 const runBash = async (command) => {
   return await exec(command)
 }
 
-const dev = async () => {
-  let successCount = 0
-  let failureCount = 0
+const main = async (manager, command) => {
   if (config.packages) {
+    const count = { success: 0, failure: 0 }
     for (package of config.packages) {
-      const { stdout, stderr } = await runBash(`yalc add ${package.yalc}`)
-      if (stdout) {
-        console.log(`🎁 ${success(package.yalc)}: ${stdout}`)
-        successCount = successCount += 1
-      }
-      if (stderr) {
-        console.log(`⛔️ ${error(package.yalc)}: ${stderr}`)
-        failureCount = failureCount += 1
+      try {
+        const argString = package[manager].args.join(" ")
+        const managerName =
+          manager.charAt(0).toUpperCase() + manager.slice(1)
+        
+        console.log(
+          `📬 ${success(managerName)} is installing ${success(
+            package[manager].name
+          )}...`
+        )
+        const { stdout, stderr } = await runBash(`${command} ${package[manager].name} ${argString}`)
+
+        if (stdout) {
+          console.log(`🎁 ${success(package[manager].name)}: ${stdout}`)
+          count.success = count.success += 1
+        }
+        if (stderr && !stdout) {
+          console.log(`⛔️ ${error(package[manager].name)}: ${stderr}`)
+          count.failure = count.failure += 1
+        }
+      } catch (err) {
+        count.failure = count.failure += 1
+        console.log(`⛔️ ${error(package[manager].name)}: ${err.stderr}`)
       }
     }
-
-    const successMessage = `${successCount} successful.`
-    const failureMessage = `${failureCount} failed.`
+    const successMessage = `${count.success} successful.`
+    const failureMessage = `${count.failure} failed.`
     return `📫 Yalc-helper finished! ${success(successMessage)} ${error(
       failureMessage
     )}`
   } else {
-    return "📦 No packages found in yalc-helper.config.js."
+    return noPackages
   }
 }
 
-const prod = async () => {
-  let successCount = 0
-  let failureCount = 0
-  if (config.packages) {
-    for (package of config.packages) {
-      try {
-        const { stdout } = await runBash(`npm install ${package.npm}`)
-        if (stdout) {
-          console.log(`🎁 ${success(package.npm)}: ${stdout}`)
-          successCount = successCount += 1
-        }
-      } catch (err) {
-        failureCount = failureCount += 1
-        console.log(`⛔️ ${error(package.name)}: ${err.stderr}`)
-      }
-    }
-
-    const successMessage = `${successCount} successful.`
-    const failureMessage = `${failureCount} failed.`
-    return `📫 Yalc-helper finished! ${success(successMessage)} ${error(failureMessage)}`
-  } else {
-    return "📦 No packages found in yalc-helper.config.js."
-  }
+const yalc = async () => {
+  return await main('yalc', 'yalc add')
 }
 
-module.exports = { dev, prod }
+const npm = async () => {
+  return await main('npm', 'npm install')
+}
+
+const yarn = async () => {
+  return await main('yarn', 'yarn add')
+}
+
+module.exports = { yalc, npm }
 
 require("make-runnable/custom")({
   printOutputFrame: false,
