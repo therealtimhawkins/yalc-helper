@@ -64,7 +64,7 @@ const yarn = async () => {
   return await main('yarn', 'yarn add')
 }
 
-module.exports = { yalc, npm }
+module.exports = { yalc, npm, yarn }
 
 require("make-runnable/custom")({
   printOutputFrame: false,

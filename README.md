@@ -38,3 +38,6 @@ You can add as many packages as you need. Enter any installation args in the arg
 - Yalc: `node node_modules/yalc-helper yalc` installs all the yalc packages you have in the config
 - Npm: `node node_modules/yalc-helper npm` installs all the npm packages in your config
 - Yarn: `node node_modules/yalc-helper yarn` installs all the yarn packages in your config
+
+I use `yalc-helper` to install yalc packages during my `npm run dev` script then revert back to npm/yarn during my `prebuild` or `prepublish` scripts.
+It also works great as a CLI.
