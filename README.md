@@ -3,7 +3,7 @@
 
 This helper is useful for switching quickly between `npm` or `yarn` packages used in production with the `yalc` packages you publish locally.
 
-Head to [whitecolor/yalc]('https://github.com/search?q=yalc') to install yalc.
+Head to [whitecolor/yalc]('https://www.npmjs.com/package/yalc') to install yalc.
 
 ## Install
 
